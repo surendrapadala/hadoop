@@ -1,0 +1,28 @@
+- hosts: master 
+  remote_user: hadoop2 
+  vars_files:
+   - vars/user.yml
+   - vars/var_basic.yml
+   - vars/var_master.yml
+  vars:
+     add_user: true
+     generate_key: true
+     open_firewall: true
+     disable_firewall: false
+     install_hadoop: true
+     config_hadoop: true
+  tasks:
+    - name: Login testing on {{ slave1_hostname }} 
+      shell: |
+        ssh -o "StrictHostKeyChecking no" {{ user }}@{{ slave1_hostname }}
+        exit
+
+    - name: Login  testing on {{ slave2_hostname }}
+      shell: |
+        ssh -o "StrictHostKeyChecking no" {{ user}}@{{ slave2_hostname }}
+        exit
+   
+    - name: start-all
+      beacome: yes
+      shell: |
+        sh /home/{{ user }}/hadoop-{{ hadoop_version }}/sbin/start-all.sh
